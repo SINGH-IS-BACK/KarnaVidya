@@ -10,3 +10,4 @@ Meaning Object
 	ArrayList<String> meaning_ta;
 
 	
+	
