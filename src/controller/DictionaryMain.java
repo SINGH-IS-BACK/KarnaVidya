@@ -20,13 +20,13 @@ public class DictionaryMain
 		try {
 			 
 		    writer = new BufferedWriter(new OutputStreamWriter(
-			          new FileOutputStream("res/5000_meaning.txt"), "utf-8"));
+			          new FileOutputStream("res/top20k_meaning.txt"), "utf-8"));
 		
 			String sCurrentLine;
- 			br = new BufferedReader(new FileReader("res/5000.txt"));
+ 			br = new BufferedReader(new FileReader("res/top20k.txt"));
 			
 			while ((sCurrentLine = br.readLine()) != null) {
-				getMeaning(sCurrentLine, writer);
+				getMeaning(sCurrentLine.toLowerCase(), writer);
 			}
 			writer.close();
 			
@@ -44,20 +44,12 @@ public class DictionaryMain
 	
 	
 	public static String getMeaningWithSentence(Synset[] synsets, int i){
-		String meaningWithSentence = "";
-		String[] wordForms = synsets[i].getWordForms();
-		
-		for (int j = 0; j < wordForms.length; j++)
-		{
-			meaningWithSentence += ((j > 0 ? ", " : "") +
-					wordForms[j]);
-		}
-		meaningWithSentence += ": (" + synsets[i].getDefinition();
+		String meaningWithSentence = synsets[i].getDefinition();
 		String UsageExample[] = synsets[i].getUsageExamples();
-		for(int j = 0; j < UsageExample.length ; j++){
-			meaningWithSentence += ";" + synsets[i].getUsageExamples()[j];
+		if(UsageExample.length>0){
+			meaningWithSentence += "&&" + UsageExample[0];
 		}
-		return meaningWithSentence += ")";
+		return meaningWithSentence;
 	}
 	
 	public static void getMeaning(String wordForm, Writer writer) throws IOException

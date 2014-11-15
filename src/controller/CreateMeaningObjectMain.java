@@ -9,6 +9,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 import com.google.gson.Gson;
@@ -24,16 +25,16 @@ public class CreateMeaningObjectMain
 		try {
 			 
 		    writer = new BufferedWriter(new OutputStreamWriter(
-			          new FileOutputStream("5000_meaningObject.txt"), "utf-8"));
+			          new FileOutputStream("res/top20k_meaningObject.txt"), "utf-8"));
 			String sCurrentLine;
  
-			br_en = new BufferedReader(new FileReader("5000_meaning.txt"));
+			br_en = new BufferedReader(new FileReader("res/top20k_meaning.txt"));
 
 			while ((sCurrentLine = br_en.readLine()) != null) {
 				
 				MeaningObject meaningObject = new MeaningObject();
-				ArrayList<String> meaning_en = new ArrayList<String>();
-				ArrayList<String> meaning_ta = new ArrayList<String>();
+				LinkedHashMap<String, String> meaning_en = new LinkedHashMap<String, String>();
+				LinkedHashMap<String, String> meaning_ta = new LinkedHashMap<String, String>();
 			
 				
 				meaningObject.setWord(sCurrentLine);
@@ -41,21 +42,24 @@ public class CreateMeaningObjectMain
 				meaningObject.setWord_tamil("");
 				meaningObject.setSynonym_en(getSynonym(sCurrentLine));
 				
+				ArrayList<String> meaning_en_arraylist = new ArrayList<String>();
+				//ArrayList<String> meaning_ta_arraylist = new ArrayList<String>();
 				while (!((sCurrentLine = br_en.readLine())).contains("#"))
 				{
-					System.out.println(sCurrentLine);
-					meaning_en.add(sCurrentLine);
-					//meaning_ta.add(br_ta.readLine());
+					meaning_en_arraylist.add(sCurrentLine);
+					//meaning_ta_arraylist.add(sCurrentLine);
 				}
-				//br_ta.readLine();
-				meaningObject.setPart_of_speech(meaning_en.remove(meaning_en.size()-1));
-				meaningObject.setMeaning_en(meaning_en);
 				
-				//meaning_ta.remove(meaning_ta.size()-1);
+				meaning_en = getMeaningLinkedMap(meaning_en_arraylist);
+				//meaning_ta = getMeaningLinkedMap(meaning_ta_arraylist);
+				
+				meaningObject.setPart_of_speech(meaning_en_arraylist.get(meaning_en_arraylist.size()-1));
+				//br_ta.readLine();
+				meaningObject.setMeaning_en(meaning_en);
 				meaningObject.setMeaning_ta(meaning_ta);
 				
 				Gson gson = new Gson();
-				System.out.println(gson.toJson(meaningObject).toString());
+				//System.out.println(gson.toJson(meaningObject).toString());
 			    writer.write(gson.toJson(meaningObject).toString());
 			    writer.write("\n");
 				
@@ -74,6 +78,19 @@ public class CreateMeaningObjectMain
  
 	}
 	
+	private static LinkedHashMap<String, String> getMeaningLinkedMap(
+			ArrayList<String> meaning_en_arraylist) {
+		LinkedHashMap<String, String> meaningLinkedMap = new LinkedHashMap<String, String>();
+		for(int i = 0 ; i< meaning_en_arraylist.size()-1;i++){
+			String meaning_sentence[] = meaning_en_arraylist.get(i).split("&&");
+			if(meaning_sentence.length>1)
+				meaningLinkedMap.put(meaning_sentence[0],meaning_sentence[1]);
+			else
+				meaningLinkedMap.put(meaning_sentence[0],"");
+		}
+		return meaningLinkedMap;
+	}
+
 	public static Set<String> getSynonym (String word){
 		Set<String> synonyms = new HashSet<String>();
 		WordNetDatabase database = WordNetDatabase.getFileInstance();

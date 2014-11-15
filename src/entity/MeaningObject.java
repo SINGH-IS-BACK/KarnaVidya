@@ -1,6 +1,8 @@
 package entity;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class MeaningObject {
@@ -9,8 +11,8 @@ public class MeaningObject {
 	String word_tamil;
 	Set<String> synonym_en;
 	String Part_of_speech;	//noun, verb, adjective, adverb, adjective_satellite
-	ArrayList<String> meaning_en;
-	ArrayList<String> meaning_ta;
+	LinkedHashMap<String, String> meaning_en;
+	LinkedHashMap<String, String> meaning_ta;
 	
 	public String getWord_tamil() {
 		return word_tamil;
@@ -25,16 +27,16 @@ public class MeaningObject {
 		this.synonym_en = synonym_en;
 	}
 	
-	public ArrayList<String> getMeaning_en() {
+	public LinkedHashMap<String, String> getMeaning_en() {
 		return meaning_en;
 	}
-	public void setMeaning_en(ArrayList<String> meaning_en) {
+	public void setMeaning_en(LinkedHashMap<String, String> meaning_en) {
 		this.meaning_en = meaning_en;
 	}
-	public ArrayList<String> getMeaning_ta() {
+	public LinkedHashMap<String, String> getMeaning_ta() {
 		return meaning_ta;
 	}
-	public void setMeaning_ta(ArrayList<String> meaning_ta) {
+	public void setMeaning_ta(LinkedHashMap<String, String> meaning_ta) {
 		this.meaning_ta = meaning_ta;
 	}
 	public String getWord() {
