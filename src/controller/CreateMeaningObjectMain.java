@@ -21,14 +21,16 @@ public class CreateMeaningObjectMain
 	public static void main(String[] args)
 	{
 		BufferedReader br_en = null;
+		BufferedReader br_ta = null;
 		Writer writer = null;
 		try {
 			 
 		    writer = new BufferedWriter(new OutputStreamWriter(
-			          new FileOutputStream("res/top20k_meaningObject.txt"), "utf-8"));
+			          new FileOutputStream("res/20meaningObject.txt"), "utf-8"));
 			String sCurrentLine;
  
-			br_en = new BufferedReader(new FileReader("res/top20k_meaning.txt"));
+			br_en = new BufferedReader(new FileReader("res/20MeaningsEnglish.txt"));
+			br_ta = new BufferedReader(new FileReader("res/20MeaningsTamil.txt"));
 
 			while ((sCurrentLine = br_en.readLine()) != null) {
 				
@@ -38,25 +40,27 @@ public class CreateMeaningObjectMain
 			
 				
 				meaningObject.setWord(sCurrentLine);
-				//meaningObject.setWord_tamil(br_ta.readLine());
-				meaningObject.setWord_tamil("");
+				meaningObject.setWord_tamil(br_ta.readLine());
+				
+				//meaningObject.setWord_tamil("");
 				meaningObject.setSynonym_en(getSynonym(sCurrentLine));
 				
 				ArrayList<String> meaning_en_arraylist = new ArrayList<String>();
-				//ArrayList<String> meaning_ta_arraylist = new ArrayList<String>();
+				ArrayList<String> meaning_ta_arraylist = new ArrayList<String>();
 				while (!((sCurrentLine = br_en.readLine())).contains("#"))
 				{
 					meaning_en_arraylist.add(sCurrentLine);
-					//meaning_ta_arraylist.add(sCurrentLine);
+					meaning_ta_arraylist.add(br_ta.readLine());
 				}
+				br_ta.readLine();
 				
-				meaning_en = getMeaningLinkedMap(meaning_en_arraylist);
+				//meaning_en = getMeaningLinkedMap(meaning_en_arraylist);
 				//meaning_ta = getMeaningLinkedMap(meaning_ta_arraylist);
 				
-				meaningObject.setPart_of_speech(meaning_en_arraylist.get(meaning_en_arraylist.size()-1));
-				//br_ta.readLine();
-				meaningObject.setMeaning_en(meaning_en);
-				meaningObject.setMeaning_ta(meaning_ta);
+				meaningObject.setPart_of_speech(meaning_en_arraylist.remove(meaning_en_arraylist.size()-1));
+				meaningObject.setMeaning_en(meaning_en_arraylist);
+				meaning_ta_arraylist.remove(meaning_ta_arraylist.size()-1);
+				meaningObject.setMeaning_ta(meaning_ta_arraylist);
 				
 				Gson gson = new Gson();
 				//System.out.println(gson.toJson(meaningObject).toString());
